@@ -5,7 +5,7 @@ const CartIcon = () => {
     <svg
       id='Layer_1'
       fill='white'
-      enable-background='new 0 0 512.002 512.002'
+      enableBackground='new 0 0 512.002 512.002'
       viewBox='0 0 512.002 512.002'
       xmlns='http://www.w3.org/2000/svg'
     >

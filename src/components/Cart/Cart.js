@@ -11,12 +11,17 @@ const Cart = (props) => {
   );
 
   return (
-    <Modal>
+    <Modal onBackdropOrCloseButtonClick={props.onBackdropOrCloseButtonClick}>
       {cartItems}
       <div className={styles.total}>Total: 33.55</div>
       <div className={styles.actions}>
         <button className={styles.button}>Order</button>
-        <button className={styles["button--alt"]}>Cancel</button>
+        <button
+          className={styles["button--alt"]}
+          onClick={props.onBackdropOrCloseButtonClick}
+        >
+          Cancel
+        </button>
       </div>
     </Modal>
   );
