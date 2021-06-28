@@ -1,4 +1,5 @@
 import CartContext from "./cart-context.js";
+import { useReducer } from "react";
 
 const initialState = { items: [], totalAmount: 0 };
 
@@ -7,7 +8,7 @@ const cartReducer = (state, action) => {
     case "ADD_ITEM":
       const updatedItems = state.items.concat(action.payload);
       const updatedTotalAmount =
-        state.totalAmount + action.payload.amount * state.payload.price;
+        state.totalAmount + action.payload.amount * action.payload.price;
       return {
         items: updatedItems,
         totalAmount: updatedTotalAmount,
@@ -31,8 +32,8 @@ const ContextProvider = (props) => {
   };
 
   const cartContext = {
-    items: [],
-    totalAmount: 0,
+    items: cartState.items,
+    totalAmount: cartState.totalAmount,
     addItem: addItemHandler,
     removeItem: removeItemHandler,
   };
