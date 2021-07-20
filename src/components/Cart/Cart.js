@@ -1,11 +1,13 @@
 import styles from "./Cart.module.css";
 import Modal from "../UI/Modal";
 import CartItem from "./CartItem";
+import AddressForm from "./AddressForm";
 
 import CartContext from "../../store/cart-context";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 const Cart = (props) => {
+  const [orderPressed, setOrderPressed] = useState(false);
   const cartContext = useContext(CartContext);
   const totalAmount = cartContext.totalAmount.toFixed(2);
 
@@ -31,12 +33,20 @@ const Cart = (props) => {
     </ul>
   );
 
+  const orderOnClick = (event) => {
+    setOrderPressed((prevState) => true);
+  };
+
   return (
     <Modal onBackdropOrCloseButtonClick={props.onBackdropOrCloseButtonClick}>
       {cartItems}
       <div className={styles.total}>Total: ${totalAmount}</div>
       <div className={styles.actions}>
-        {totalAmount > 0 && <button className={styles.button}>Order</button>}
+        {totalAmount > 0 && (
+          <button className={styles.button} onClick={orderOnClick}>
+            Order
+          </button>
+        )}
         <button
           className={styles["button--alt"]}
           onClick={props.onBackdropOrCloseButtonClick}
@@ -44,6 +54,7 @@ const Cart = (props) => {
           Cancel
         </button>
       </div>
+      {orderPressed && <AddressForm />}
     </Modal>
   );
 };

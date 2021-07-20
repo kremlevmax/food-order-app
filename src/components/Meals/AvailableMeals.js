@@ -1,35 +1,46 @@
 import styles from "./AvailableMeals.module.css";
 import MealItem from "./MealItem/MealItem";
-
-const DUMMY_MEALS = [
-  {
-    id: "m1",
-    name: "Sushi",
-    description: "Finest fish and veggies",
-    price: 22.99,
-  },
-  {
-    id: "m2",
-    name: "Schnitzel",
-    description: "A german specialty!",
-    price: 16.5,
-  },
-  {
-    id: "m3",
-    name: "Barbecue Burger",
-    description: "American, raw, meaty",
-    price: 12.99,
-  },
-  {
-    id: "m4",
-    name: "Green Bowl",
-    description: "Healthy...and green...",
-    price: 18.99,
-  },
-];
+import { useEffect, useState } from "react";
 
 const AvailableMeals = () => {
-  const availableMeals = DUMMY_MEALS.map((item) => (
+  const [meals, setMeals] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
+
+  useEffect(() => {
+    const fetchMeals = async () => {
+      const response = await fetch(
+        "https://food-order-app-c3155-default-rtdb.firebaseio.com/meals.json"
+      );
+
+      if (!response.ok) {
+        throw new Error("Unable to get menu data");
+      }
+      const data = await response.json();
+
+      const loadedMeals = [];
+
+      for (const key in data) {
+        loadedMeals.push({
+          id: key,
+          name: data[key].name,
+          description: data[key].description,
+          price: data[key].price,
+        });
+
+        setIsLoading(false);
+      }
+
+      setMeals(loadedMeals);
+    };
+
+    fetchMeals().catch((error) => {
+      setIsLoading(false);
+      setFetchError(error.message);
+    });
+  }, []);
+
+  const availableMeals = meals.map((item) => (
     <MealItem
       id={item.id}
       name={item.name}
@@ -41,6 +52,8 @@ const AvailableMeals = () => {
 
   return (
     <section className={styles.meals}>
+      {isLoading && <p className={styles["meals-loading"]}>Loading</p>}
+      {fetchError && <p className={styles["error-loading"]}>{fetchError}</p>}
       <ul>{availableMeals}</ul>
     </section>
   );
