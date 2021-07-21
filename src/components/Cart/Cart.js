@@ -18,6 +18,20 @@ const Cart = (props) => {
     cartContext.removeItem(id);
   };
 
+  const orderOnClick = (event) => {
+    setOrderPressed((prevState) => true);
+  };
+
+  const confirmOnClick = (userData) => {
+    fetch(
+      "https://food-order-app-c3155-default-rtdb.firebaseio.com/orders.json",
+      {
+        method: "POST",
+        body: JSON.stringify({ user: userData, order: cartContext.items }),
+      }
+    );
+  };
+
   const cartItems = (
     <ul>
       {cartContext.items.map((item) => (
@@ -33,29 +47,30 @@ const Cart = (props) => {
     </ul>
   );
 
-  const orderOnClick = (event) => {
-    setOrderPressed((prevState) => true);
-  };
-
   return (
     <Modal onBackdropOrCloseButtonClick={props.onBackdropOrCloseButtonClick}>
       {cartItems}
       <div className={styles.total}>Total: ${totalAmount}</div>
       <div className={styles.actions}>
-        {totalAmount > 0 && (
+        {totalAmount > 0 && !orderPressed && (
           <button className={styles.button} onClick={orderOnClick}>
             Order
           </button>
         )}
-        <button
-          className={styles["button--alt"]}
-          onClick={props.onBackdropOrCloseButtonClick}
-        >
-          Cancel
-        </button>
+        {!orderPressed && (
+          <button
+            className={styles["button--alt"]}
+            onClick={props.onBackdropOrCloseButtonClick}
+          >
+            Cancel
+          </button>
+        )}
       </div>
       {orderPressed && (
-        <AddressForm onCancel={props.onBackdropOrCloseButtonClick} />
+        <AddressForm
+          onConfirm={confirmOnClick}
+          onCancel={props.onBackdropOrCloseButtonClick}
+        />
       )}
     </Modal>
   );

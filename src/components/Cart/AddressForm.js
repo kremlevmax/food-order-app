@@ -1,4 +1,4 @@
-import styles from "./AddressForm.module.css";
+import styles from "./Cart.module.css";
 import { useRef, useState } from "react";
 
 const isValueValid = (value) => value.trim() !== "";
@@ -26,7 +26,10 @@ const AddressForm = (props) => {
       addressIsValid: isValueValid(address),
       telephoneIsValid: isPhoneValid(telephone),
     });
+
+    props.onConfirm({ name, address, telephone });
   };
+
   return (
     <form>
       <div className={styles.control}>
@@ -44,8 +47,12 @@ const AddressForm = (props) => {
         <input type='text' id='phone' ref={telephoneRef} />
         {!formIsValid.telephoneIsValid && <p>Enter a valid telephone:</p>}
       </div>
-      <button onClick={orderHandler}>Order</button>
-      <button onClick={props.onCancel}>Cancel</button>
+      <button onClick={orderHandler} className={styles.button}>
+        Order
+      </button>
+      <button onClick={props.onCancel} className={styles["button--alt"]}>
+        Cancel
+      </button>
     </form>
   );
 };
