@@ -54,7 +54,9 @@ const Cart = (props) => {
           Cancel
         </button>
       </div>
-      {orderPressed && <AddressForm />}
+      {orderPressed && (
+        <AddressForm onCancel={props.onBackdropOrCloseButtonClick} />
+      )}
     </Modal>
   );
 };
